@@ -1,4 +1,4 @@
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzr1VlvoQQTmxiVv2bNhGXJw4T3vbhS59GrihJIdfOtHSh1j3SOnCmXLClGxbhUJRO5tg/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwJ4q4ASU3whAKpzIoIN0NleH5pFSeEPJ11T1HLygswYRnjGUJBFczwhqiSCCEegBi_Rw/exec';
 
 const CACHE_CONFIG = {
     DURATIONS: {
@@ -1337,8 +1337,10 @@ function renderProgramDetailContent(program, programPromo, finalPrice) {
 
                         <div class="detail-section" style="background: var(--white); padding: 2rem; border-radius: var(--border-radius); box-shadow: var(--shadow-soft); margin-bottom: 2rem;">
                             <h2 style="color: var(--dark-gray); margin-bottom: 1.5rem;">📚 Sistem Pembelajaran</h2>
-                            <div style="line-height: 1.8; color: var(--medium-gray);">${sistemPembelajaran}</div>
+                        <div style="line-height: 1.8; color: var(--medium-gray);">
+                            ${renderSistemPembelajaran(sistemPembelajaran)}
                         </div>
+                            </div>
 
                         <div class="detail-section" style="background: var(--white); padding: 2rem; border-radius: var(--border-radius); box-shadow: var(--shadow-soft);">
                             <h2 style="color: var(--dark-gray); margin-bottom: 1.5rem;">ℹ️ Informasi Program</h2>
@@ -1463,7 +1465,39 @@ function renderFasilitasFromData(fasilitasData) {
         </ul>
     `;
 }
-
+function renderSistemPembelajaran(sistemData) {
+    if (!sistemData) {
+        return '<p>- Tidak ada informasi sistem pembelajaran</p>';
+    }
+    
+    let sistemArray = [];
+    
+    if (typeof sistemData === 'string') {
+        if (sistemData.includes('\n')) {
+            sistemArray = sistemData.split('\n').map(item => item.trim()).filter(item => item);
+        } else {
+            sistemArray = sistemData.split(',').map(item => item.trim()).filter(item => item);
+        }
+    }
+    
+    if (sistemArray.length === 0) {
+        return `<p style="line-height: 1.8; color: var(--medium-gray);">${sistemData}</p>`;
+    }
+    
+    // Styling dengan icon check
+    return `
+        <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+            ${sistemArray.map(item => `
+                <div style="display: flex; align-items: flex-start; gap: 1rem;">
+                    <div style="background: var(--primary-teal); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; flex-shrink: 0;">
+                        ✓
+                    </div>
+                    <span style="color: var(--medium-gray); line-height: 1.5; flex: 1;">${item}</span>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
 async function loadPromosData() {
     const container = document.getElementById('promosContainer');
     const noPromoMessage = document.getElementById('noPromoMessage');
@@ -3748,4 +3782,5 @@ PerformanceTracker.end('homepage_loading');
 
 window.CacheManager = CacheManager;
 window.ProgressManager = ProgressManager;
+
 
